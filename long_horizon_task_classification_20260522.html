@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>长程任务分类报告</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667085;
+      --subtle: #8492a6;
+      --line: #d8dee8;
+      --soft: #f5f7fb;
+      --panel: #ffffff;
+      --page: #f8fafc;
+      --accent: #0f766e;
+      --accent-soft: #e7f6f3;
+      --blue: #1d4ed8;
+      --blue-soft: #eef6ff;
+      --green: #166534;
+      --green-soft: #f0fdf4;
+      --orange: #c2410c;
+      --orange-soft: #fff7ed;
+      --gray-soft: #f8fafc;
+      --shadow: 0 18px 48px rgba(23, 32, 51, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--page);
+      line-height: 1.58;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    img, video {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      background: #eef2f7;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .side {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      padding: 24px 18px;
+      overflow: auto;
+    }
+
+    .side h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .side p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toc-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #344054;
+      text-transform: uppercase;
+    }
+
+    .toc {
+      display: grid;
+      gap: 5px;
+    }
+
+    .toc a {
+      border-radius: 8px;
+      color: #344054;
+      font-size: 13px;
+      line-height: 1.3;
+      padding: 8px 10px;
+    }
+
+    .toc a:hover {
+      background: var(--accent-soft);
+      color: #0f5f59;
+    }
+
+    main {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(360px, 0.8fr);
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .hero-copy, .hero-panel, section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-copy {
+      padding: 30px;
+      display: grid;
+      align-content: center;
+    }
+
+    .hero-panel { padding: 18px; }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, h4, p { overflow-wrap: anywhere; }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 40px;
+      line-height: 1.14;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 26px;
+      line-height: 1.22;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.28;
+    }
+
+    h4 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    p { margin: 0 0 10px; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 20px;
+      scroll-margin-top: 22px;
+    }
+
+    .lead {
+      max-width: 860px;
+      color: #344054;
+      font-size: 16px;
+    }
+
+    .muted, .source, figcaption {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .source { margin-bottom: 12px; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .kpi {
+      min-height: 98px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--soft);
+    }
+
+    .kpi span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .kpi strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .kpi p {
+      margin: 7px 0 0;
+      color: #475467;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .callout {
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      background: var(--orange-soft);
+      padding: 13px 14px;
+    }
+
+    .callout p { margin: 0; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .section-head p { margin-bottom: 0; }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: #ffffff;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .badge.l3 { color: #7c2d12; background: var(--orange-soft); border-color: #fed7aa; }
+    .badge.l2, .badge.l2p { color: #075985; background: var(--blue-soft); border-color: #bae6fd; }
+    .badge.l1 { color: var(--green); background: var(--green-soft); border-color: #bbf7d0; }
+    .badge.l0 { color: #475467; background: var(--gray-soft); }
+    .badge.media { color: #0f5f59; background: var(--accent-soft); border-color: #99d9cf; }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .level-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .level-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .level-card small {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .rule {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--soft);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: #ffffff;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 11px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: var(--soft);
+      color: #344054;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .table-wrap table { border: 0; }
+    .table-wrap th:first-child, .table-wrap td:first-child { border-left: 0; }
+    .table-wrap th:last-child, .table-wrap td:last-child { border-right: 0; }
+    .table-wrap tr:first-child th { border-top: 0; }
+    .table-wrap tr:last-child td { border-bottom: 0; }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    figure { margin: 0; }
+
+    .media-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .media-frame {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 16 / 10;
+      background: #eef2f7;
+      overflow: hidden;
+    }
+
+    .media-frame.contain img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .media-frame.cover img, .media-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-frame video { object-fit: contain; background: #111827; }
+
+    figcaption {
+      border-top: 1px solid var(--line);
+      padding: 9px 10px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .ribbon {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      z-index: 1;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.92);
+      color: #ffffff;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .frame-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .frame-strip img {
+      aspect-ratio: 4 / 3;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .image-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .sample {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 16px;
+      align-items: start;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      margin-top: 18px;
+    }
+
+    .sample:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .sample h3 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qa {
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      background: #f7fbfa;
+      padding: 10px 11px;
+      margin: 10px 0;
+    }
+
+    .qa b {
+      display: block;
+      margin-bottom: 4px;
+      color: #344054;
+    }
+
+    .qa p {
+      margin: 0;
+      color: #344054;
+      overflow-wrap: anywhere;
+    }
+
+    .compact-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 19px;
+    }
+
+    .compact-list li { padding-left: 2px; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .mini-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--soft);
+    }
+
+    .raw-link {
+      color: var(--accent);
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    @media (max-width: 1160px) {
+      .layout { grid-template-columns: 1fr; }
+      .side {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .toc { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .hero { grid-template-columns: 1fr; }
+      .media-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 860px) {
+      main { padding: 16px; }
+      .hero-copy, .hero-panel, section { padding: 18px; }
+      h1 { font-size: 32px; }
+      h2 { font-size: 23px; }
+      .level-grid, .rules-grid, .sample, .two-col { grid-template-columns: 1fr; }
+      .toc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .media-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      main { padding: 12px; }
+      .side { padding: 16px 12px; }
+      .toc { grid-template-columns: 1fr; }
+      .frame-strip, .image-pair { grid-template-columns: 1fr; }
+      table { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="side">
+      <h1>长程任务分类</h1>
+      <p>原始统计日期 2026-05-22<br>页面整理 2026-05-26<br>新增数据复核 2026-05-26<br>Root: /home/liyuanshuai/data/datasets</p>
+
+      <div class="toc-title"><span>目录</span><span>TOC</span></div>
+      <nav class="toc" aria-label="页面目录">
+        <a href="#definition">判定口径</a>
+        <a href="#levels">分级标准</a>
+        <a href="#volume">数据量统计</a>
+        <a href="#effective-scale">有效规模判断</a>
+        <a href="#table">分类总表</a>
+        <a href="#media">相关图片/视频</a>
+        <a href="#examples">代表样本</a>
+        <a href="#not-long">易误判任务</a>
+        <a href="#recommendations">训练/评估建议</a>
+        <a href="#counting">计数口径</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Long Horizon Audit</p>
+          <h1>长程任务分类报告</h1>
+          <p class="lead">这份报告把本地数据集按 horizon level 分层：真正长程 episode / planning、视频或轨迹时序、多视角上下文、单步原子标注。新版把目录、图像、视频预览和代表样本放到同一条阅读线上，方便快速判断哪些数据值得优先用于长程能力训练。</p>
+        </div>
+        <div class="hero-panel" aria-label="报告概览">
+          <div class="kpi-grid">
+            <div class="kpi"><span>L3 强长程</span><strong>7 类</strong><p>episode 控制、Task planning、LeRobot action/state、BDDL demo 与 sequence_plan。</p></div>
+            <div class="kpi"><span>L2 时序/轨迹</span><strong>6 类</strong><p>视频过程、轨迹点序列、路径选择和空间视频理解。</p></div>
+            <div class="kpi"><span>L1 上下文</span><strong>2 组</strong><p>多视角、跨图、RGB-depth 和大规模空间图像 QA，但缺少动作序列。</p></div>
+            <div class="kpi"><span>L0 原子能力</span><strong>1 组</strong><p>单图 bbox、point、segmentation、grounding、QA。</p></div>
+          </div>
+        </div>
+      </header>
+
+      <section id="definition">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Definition</p>
+            <h2>什么叫长程任务</h2>
+          </div>
+          <div class="pill-row">
+            <span class="badge media">history</span>
+            <span class="badge media">future</span>
+            <span class="badge media">episode</span>
+            <span class="badge media">trajectory</span>
+          </div>
+        </div>
+        <p>这里的“长程”不是指文件很大，也不是指 prompt 很长，而是指一个样本的正确输出依赖一段时间、步骤或状态的累积。典型信号包括多帧视频、episode、过去/未来步骤、剩余步骤、next action、action/state 序列、ordered trajectory、sequence_plan 或中间 latent helper image。</p>
+        <div class="rules-grid">
+          <div class="rule">
+            <h3>算长程的信号</h3>
+            <p>必须根据动作先后、任务阶段、历史/未来、连续视频观察、多个中间推理步骤或完整 episode 才能给出正确答案。</p>
+          </div>
+          <div class="rule">
+            <h3>不算长程的信号</h3>
+            <p>只看一张图就能回答一个框、点、分割、单步选择或普通 QA，通常只是长程系统里的基础感知子技能。</p>
+          </div>
+        </div>
+        <div class="callout" style="margin-top:14px;">
+          <p><b>核心判断：</b>如果监督目标携带“时间顺序”或“阶段依赖”，按 L2/L3 看；如果只是单个空间标签，即使数据规模很大，也不要误判成长程。</p>
+        </div>
+      </section>
+
+      <section id="levels">
+        <p class="eyebrow">Levels</p>
+        <h2>分级标准</h2>
+        <div class="level-grid">
+          <div class="level-card">
+            <h3><span class="badge l3">L3</span>显式长程规划 / episode 控制</h3>
+            <p>样本直接描述多步任务、过去/未来步骤、剩余步骤、完整 episode 或 action/state 序列。</p>
+            <small>RoboInter-Data episodes；MolmoAct2；calvin_lerobot；RoboCerebra demos；RoboInter-VQA Task_planning；ILVR sequence_plan。</small>
+          </div>
+          <div class="level-card">
+            <h3><span class="badge l2">L2</span>过程 / 轨迹 / 视频时序</h3>
+            <p>需要按时间顺序理解视频、轨迹点或动作过程，但输出多为局部轨迹、选择或问答。</p>
+            <small>RoboInter-VQA trajectory；RoboVQA；SIMS/VSI 视频；FSD_visual_trace。</small>
+          </div>
+          <div class="level-card">
+            <h3><span class="badge l1">L1</span>多视角 / 跨图上下文</h3>
+            <p>需要比较多张图或 RGB-depth，但没有明确多步行动计划。</p>
+            <small>SenseNova-SI-8M；RefSpatial 3D multi-view；VST-P multi-image。</small>
+          </div>
+          <div class="level-card">
+            <h3><span class="badge l0">L0</span>单步 / 原子标注</h3>
+            <p>单图 bbox、point、segmentation、单问答或单目标定位；可作为长程系统的子技能。</p>
+            <small>contact box/current box/final box；RoboPoint；SAT；CLEVR；RefCOCO/handal grounding。</small>
+          </div>
+        </div>
+      </section>
+
+      <section id="volume">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Data Volume</p>
+            <h2>数据量统计与口径</h2>
+            <p class="muted">2026-05-26 补跑核验：目录体积来自 `du -sh`；条数优先来自实际 metadata / JSON 直接计数，其次来自既有缓存报告。当前 datasets 根目录约 4.0T，排除 `.cache/.lock/.metadata` 后无真实待解压归档。</p>
+          </div>
+          <span class="badge media">verified counts</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>数据集</th><th>本地体积</th><th>已核验数据量</th><th>统计口径</th></tr></thead>
+            <tbody>
+              <tr><td>RoboInter-Data</td><td>382G</td><td>DROID: 152,986 episodes；46,259,014 frames；305,972 videos；43,026 tasks。<br>RH20T: 82,894 episodes；40,755,632 frames；165,788 videos；146 tasks。</td><td>`info.json` 字段 + `episodes.jsonl/tasks.jsonl` 行数核验。</td></tr>
+              <tr><td>RoboInter-VQA</td><td>149G</td><td>Task_planning: train 928,819；val 36,494，其中 choice 15,059、decide 10,629、planning 10,806。<br>TrajectoryPrediction origin_format train: 130,170，其中 init 65,085、no-init 65,085。<br>TrajChoice/TrajDirection/TrajLang train files: 33,939。</td><td>关键 JSON 文件直接 `json.load` 后计数；Generation 的 llava/origin/smart_resize 是格式变体，不能相加。</td></tr>
+              <tr><td>MolmoAct2</td><td>375G</td><td>已核验 LeRobot v3 子集：266,539 episodes；30,665,227 frames；约 70,474 tasks；1,915 mp4。DROID 子集最大：74,604 episodes、17,758,044 frames。</td><td>`meta/info.json` 汇总；`data/chunk-*/*.parquet` 与 `videos/*.mp4` 已展开，无需解压。</td></tr>
+              <tr><td>calvin_lerobot</td><td>106G</td><td>17,870 episodes；1,071,743 frames；389 tasks；30 fps；robot_type=panda；total_videos=0，图像 bytes 嵌在 episode parquet 内。</td><td>LeRobot v2.1 `meta/info.json` + 17,870 个 episode parquet 核验。</td></tr>
+              <tr><td>RoboCerebra</td><td>128G</td><td>trainset 1,000 case 目录；约 1,063 mp4、1,060 png、1,056 hdf5、1,069 bddl；RLDS/TFDS 分片 1,536 个；RoboCerebraBench 65 case 目录。</td><td>目录与文件类型直接扫描；`*.tfrecord-*` 是训练分片，不是压缩包。</td></tr>
+              <tr><td>SenseNova-SI-8M</td><td>1.1T</td><td>8,164,067 JSONL rows；2,763,306 已解压唯一图片；40,018,115 image references；70.2% 样本为多图。52 个图片 zip 已校验解压并删除。</td><td>解压状态文件 + JSONL 全量扫描；无显式 category/type 字段，分类需从 prompt 模板反推。</td></tr>
+              <tr><td>Molmo2-ER</td><td>1.5T</td><td>SIMS-VSI 203,048 rows；VSI-590K 590,667 records，其中 video 374,148、image 216,519；SenseNova-SI 833,132 rows；SAT 172,384 rows；VST-P 合计 563,190 rows。</td><td>来自 parquet/jsonl 缓存统计；RoboVQA 大 JSON 本轮未全量重数，只校验字段结构和样本。</td></tr>
+              <tr><td>Embodied-R1-Dataset</td><td>53G</td><td>总计 321,397 rows；其中 FSD_visual_trace 33,090 rows。</td><td>来自 parquet profile 与语义汇总；FSD_visual_trace 的图片样例已从 parquet bytes 导出到页面 assets。</td></tr>
+              <tr><td>ILVR / COMT</td><td>22G</td><td>TRAIN 3,450；TEST 400；PNG helper images 17,087，其中 creation 3,109、deletion 5,496、selection 4,465、update 4,017。sequence_plan steps: text 19,658 + latent 11,961。</td><td>JSONL 行数和 PNG 文件数直接核验；sequence_plan step 数来自既有语义汇总。</td></tr>
+              <tr><td>RefSpatial</td><td>359G</td><td>大规模 RGB-depth 空间推理数据；本页只按任务类型引用，没有在本轮重新合并全量样本数。</td><td>目录体积已核验；任务类型靠 2D/3D/Simulator 文件名和目录区分。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout" style="margin-top:14px;">
+          <p><b>还没全量重数的部分：</b>Molmo2-ER / RoboVQA 的 6 个超大 JSON 文件本轮没有重新 streaming 计数；报告里只保留“reasoning_0..4 + understanding 大 JSON”的描述，避免把采样结果写成精确总数。新加入的 SenseNova-SI-8M、MolmoAct2、calvin_lerobot、RoboCerebra 已完成可读性/解压状态核验。</p>
+        </div>
+      </section>
+
+      <section id="effective-scale">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Effective Scale</p>
+            <h2>严格长程任务其实不算大</h2>
+            <p class="muted">这里按“真正需要跨时间/跨步骤推理”的口径看有效规模，而不是按磁盘大小或总图片数看。</p>
+          </div>
+          <span class="badge l3">core long-horizon</span>
+        </div>
+        <div class="two-col">
+          <div class="mini-panel">
+            <h3>严格 L3 核心规模</h3>
+            <ul class="compact-list">
+              <li>RoboInter-Data: 235,880 episodes；87,014,646 frames；471,760 videos。磁盘很大，但 episode 级样本是 23.6 万级。</li>
+              <li>MolmoAct2: 266,539 LeRobot episodes；30,665,227 frames；覆盖 DROID、RT-1、Bridge、BC-Z、LIBERO、MolmoAct tabletop/household，是新加入的核心机器人 action/state 长程数据。</li>
+              <li>calvin_lerobot: 17,870 episodes；1,071,743 frames；389 tasks；适合桌面 manipulation 长程技能补充。</li>
+              <li>RoboCerebra: 1,000 trainset cases + BDDL/demo.hdf5/mp4 + RLDS 分片；更适合做多步桌面/家庭任务 demo 与 benchmark。</li>
+              <li>RoboInter-VQA Task_planning: 965,313 QA records，其中 train 928,819、val 36,494。它是最像 VLM 长程 planning 的主力。</li>
+              <li>ILVR / COMT: 3,850 problems；sequence_plan steps 31,619。推理链清楚，但规模很小。</li>
+            </ul>
+          </div>
+          <div class="mini-panel">
+            <h3>L2 只是“长程相关”</h3>
+            <ul class="compact-list">
+              <li>TrajectoryPrediction origin_format train: 130,170；更像局部轨迹/waypoint，不是完整任务规划。</li>
+              <li>TrajChoice/TrajDirection/TrajLang train files: 33,939；FSD_visual_trace: 33,090。</li>
+              <li>SIMS-VSI + VSI-590K video subset 约 577,196 条视频空间样本；SenseNova-SI-8M 有 573 万多图样本，但重点是空间/视角/关系，不是机器人多步执行计划。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout" style="margin-top:14px;">
+          <p><b>结论：</b>如果目标是“长程机器人规划/执行”，核心数据现在应扩展为 RoboInter-Data episode + MolmoAct2 + calvin_lerobot + RoboCerebra demo/benchmark + RoboInter-VQA Task_planning；ILVR 是非机器人推理链补充。SenseNova-SI-8M 与 Molmo2-ER/RefSpatial 更适合作为空间、多视角和视频理解底座。</p>
+        </div>
+      </section>
+
+      <section id="table">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Classification</p>
+            <h2>分类总表</h2>
+          </div>
+          <div class="pill-row">
+            <span class="badge l3">L3 强长程</span>
+            <span class="badge l2">L2 时序</span>
+            <span class="badge l1">L1 上下文</span>
+            <span class="badge l0">L0 原子</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="main-table">
+            <thead>
+              <tr><th>数据集/子集</th><th>分类</th><th>规模</th><th>长程信号</th><th>适合用途</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>RoboInter-Data / LeRobot DROID</td><td><span class="badge l3">L3 强长程</span></td><td>152,986 episodes；46,259,014 frames；305,972 videos；43,026 tasks</td><td>完整机器人 episode：action/state/timestamp/frame_index/task_index 与双视角视频对齐。</td><td>policy、行为克隆、动作预测、episode 级成功/失败分析</td></tr>
+              <tr><td>RoboInter-Data / LeRobot RH20T</td><td><span class="badge l3">L3 强长程</span></td><td>82,894 episodes；40,755,632 frames；165,788 videos；146 tasks</td><td>完整机器人 episode，median length 约 384 frames，最长超过 6K frames。</td><td>长程 manipulation policy、轨迹/接触/抓取过程建模</td></tr>
+              <tr><td>MolmoAct2 / LeRobot mixture</td><td><span class="badge l3">L3 强长程</span></td><td>266,539 episodes；30,665,227 frames；1,915 mp4；子集含 DROID、RT-1、Bridge、BC-Z、LIBERO、Tabletop、Household</td><td>LeRobot v3 action/state/frame_index/episode_index/task_index；部分子集有视频，与 action reasoning 模型训练目标直接相关。</td><td>机器人动作推理、policy SFT/finetune、跨数据源 action/state 统一训练</td></tr>
+              <tr><td>calvin_lerobot</td><td><span class="badge l3">L3 强长程</span></td><td>17,870 episodes；1,071,743 frames；389 tasks；30 fps；panda</td><td>每个 episode 是 parquet；包含多路 RGB/depth bytes、state、actions、timestamp、frame_index、task_index。</td><td>桌面 manipulation episode 训练，适合补充机器人长期执行数据</td></tr>
+              <tr><td>RoboCerebra / trainset + bench</td><td><span class="badge l3">L3 多步任务 demo/benchmark</span></td><td>trainset 1,000 cases；1,056 hdf5 demos；约 1,063 mp4；1,069 BDDL；RLDS/TFDS 1,536 shards</td><td>BDDL 任务 + demo.hdf5 + mp4/png/goal 描述，天然是多步桌面/家庭任务。</td><td>长程任务理解、demo 解析、BDDL/IR 约束检查和 benchmark 评测</td></tr>
+              <tr><td>RoboInter-VQA / Task_planning</td><td><span class="badge l3">L3 强长程</span></td><td>train 928,819 records；val choice/decide/planning 合计约 36K</td><td>任务名直接包含 Planning、Future、Past、Remaining Steps、Temporal、Success、Affordance。输入通常是一串时序图片。</td><td>高层任务规划 VQA、下一步动作、未来预测、剩余步骤判断</td></tr>
+              <tr><td>ILVR / COMT sequence_plan</td><td><span class="badge l3">L3 推理链长程</span></td><td>TRAIN 3,450；TEST 400；sequence_plan steps: text 19,658 + latent 11,961</td><td>每条样本含多个 text/latent 中间步骤，latent helper image 是中间视觉状态。</td><td>多步视觉/几何推理，不是机器人控制，但属于长推理链</td></tr>
+              <tr><td>RoboInter-VQA / TrajectoryPrediction</td><td><span class="badge l2">L2 轨迹型</span></td><td>origin_format train 130,170 records；另有 llava/smart_resize 格式变体</td><td>输出 10 个或更多 2D trajectory points，点的顺序就是运动过程。</td><td>局部子任务轨迹预测；可作为长程 policy 的低层技能</td></tr>
+              <tr><td>RoboInter-VQA / TrajChoice / TrajDirection / TrajLang</td><td><span class="badge l2">L2 轨迹选择</span></td><td>已统计 train trajectory-choice/direction/lang files 33,939 records；另有 grasppose 子形态</td><td>从候选轨迹、轨迹方向或轨迹语言中选择正确路径。</td><td>轨迹理解、动作趋势判断、抓取姿态选择</td></tr>
+              <tr><td>Molmo2-ER / RoboVQA</td><td><span class="badge l2p">L2+ 视频任务理解</span></td><td>reasoning_0..4 + understanding 大 JSON；每条含 video/conversations/metadata</td><td>问题围绕机器人视频中已经发生/是否成功/动作结果/任务可行性，需要理解时间过程。</td><td>视频 VQA、任务结果判断、动作后果解释</td></tr>
+              <tr><td>Molmo2-ER / SIMS-VSI</td><td><span class="badge l2">L2 视频空间</span></td><td>203,048 rows</td><td>视频帧序列用于方向、距离、数量、appearance_order、房间大小等判断。</td><td>视频空间推理；不是多步计划，但依赖连续观察</td></tr>
+              <tr><td>Molmo2-ER / VSI-590K video subset</td><td><span class="badge l2">L2 视频空间</span></td><td>590,667 total；其中 video 374,148，image 216,519</td><td>video 字段存在时是移动视角/室内扫描的时间观察；image 子集不能算视频长程。</td><td>空间方向/距离/相机视角推理</td></tr>
+              <tr><td>Embodied-R1 / FSD_visual_trace</td><td><span class="badge l2">L2 轨迹点序列</span></td><td>33,090 rows</td><td>答案包含 ordered trajectory points；单图输入，但输出是有顺序的执行轨迹。</td><td>RFT/SFT 轨迹监督，适合低层 waypoint 学习</td></tr>
+              <tr><td>SenseNova-SI-8M / RefSpatial multi-view / VST-P multi-image</td><td><span class="badge l1">L1 上下文型</span></td><td>SenseNova-SI-8M: 8,164,067 rows；2,763,306 images；约 573 万多图样本。RefSpatial/VST-P 另有多视角空间数据。</td><td>需要跨视角匹配、多图关系、相机运动或空间 QA；没有 action/state episode 或 past/future planning 输出。</td><td>长程系统的视觉空间基础，不单独当长程任务</td></tr>
+              <tr><td>SAT / CLEVR / GRiD / RoboPoint / grounding 类</td><td><span class="badge l0">L0 非长程</span></td><td>单图 QA、框/点、分割、合成空间关系</td><td>标注是单步定位或回答；即使很有用，也只是原子能力。</td><td>作为 perception/grounding 子技能</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="media">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Related Media</p>
+            <h2>相关图片和视频总览</h2>
+            <p class="muted">下面全部来自当前 `_reports/assets`，用于把“为什么是长程”直接落到真实媒体上。</p>
+          </div>
+          <span class="badge media">local assets</span>
+        </div>
+        <div class="media-grid">
+          <figure class="media-box">
+            <div class="media-frame video-frame">
+              <span class="ribbon">L3 episode video</span>
+              <video controls preload="metadata" playsinline poster="assets/video_previews/RH20T_cfg1_task_0053_user_0015_scene_0010_cfg_0001_819112070044_f1d79803c9.jpg">
+                <source src="assets/video_previews/RH20T_cfg1_task_0053_user_0015_scene_0010_cfg_0001_819112070044_f1d79803c9.webm" type="video/webm">
+                <source src="assets/local_media/RH20T_cfg1_task_0053_user_0015_scene_0010_cfg_0001_819112070044_f1d79803c99a.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption>RoboInter-Data / RH20T episode：视频与 action/state 序列对齐，是 L3 的典型形态。<br><a class="raw-link" href="assets/local_media/RH20T_cfg1_task_0053_user_0015_scene_0010_cfg_0001_819112070044_f1d79803c99a.mp4">原始 MP4</a></figcaption>
+          </figure>
+
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <span class="ribbon">L3 planning frames</span>
+              <div class="frame-strip" style="padding:10px;">
+                <img src="assets/local_media/6927_exterior_image_1_left_148_5ebc8c588ca5.jpg" alt="Task planning frame 1" loading="lazy">
+                <img src="assets/local_media/6927_exterior_image_1_left_169_360f54079c5e.jpg" alt="Task planning frame 2" loading="lazy">
+                <img src="assets/local_media/6927_exterior_image_1_left_191_f5c0eaa0acc2.jpg" alt="Task planning frame 3" loading="lazy">
+              </div>
+            </div>
+            <figcaption>Task planning / planning：多帧上下文决定 next actionable task，不能按单图 QA 看。</figcaption>
+          </figure>
+
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <span class="ribbon">L2 trajectory</span>
+              <img src="assets/local_media/75136_exterior_image_1_left_0_d972bab73bbb.jpg" alt="Trajectory prediction sample" loading="lazy">
+            </div>
+            <figcaption>TrajectoryPrediction：输出 ordered 2D waypoints，属于局部过程监督。</figcaption>
+          </figure>
+
+          <figure class="media-box">
+            <div class="media-frame video-frame">
+              <span class="ribbon">L2+ robot video</span>
+              <video controls preload="metadata" playsinline poster="assets/video_previews/4857681842253668822_049df064db.jpg">
+                <source src="assets/video_previews/4857681842253668822_049df064db.webm" type="video/webm">
+                <source src="assets/local_media/4857681842253668822_049df064db0c.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption>Molmo2-ER / RoboVQA：问题依赖机器人执行过程和任务结果。<br><a class="raw-link" href="assets/local_media/4857681842253668822_049df064db0c.mp4">原始 MP4</a></figcaption>
+          </figure>
+
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <span class="ribbon">L1 multi-view</span>
+              <div class="image-pair" style="padding:10px;">
+                <img src="assets/local_media/42444711_74020814498416_wide_image_d7816b1bfc97.png" alt="RefSpatial RGB view" loading="lazy">
+                <img src="assets/local_media/42444711_74020814498416_wide_depth_097e01ae4d26.png" alt="RefSpatial depth view" loading="lazy">
+              </div>
+            </div>
+            <figcaption>RefSpatial / RGB-depth：跨视角和深度有上下文，但一般不含执行序列。</figcaption>
+          </figure>
+
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <span class="ribbon">L3 reasoning chain</span>
+              <img src="assets/local_media/10003_ff64cc14dc45.png" alt="ILVR COMT creation sample" loading="lazy">
+            </div>
+            <figcaption>ILVR / COMT：latent helper image 是中间视觉推理状态，属于 reasoning-chain 长程。</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="examples">
+        <p class="eyebrow">Representative Samples</p>
+        <h2>代表样本解释</h2>
+
+        <article class="sample">
+          <div>
+            <h3>RoboInter-Data episode task <span class="badge l3">L3</span></h3>
+            <p class="source">lerobot_droid_anno/meta/tasks.jsonl · fields: task_index, task + episode action/state/video</p>
+            <p><b>为什么这样分：</b>任务要在几十到几千帧里完成，模型必须维护阶段、对象状态和动作历史。</p>
+            <div class="qa"><b>Prompt / question</b><p>Move the grey fleece to the left</p></div>
+            <div class="qa"><b>Answer / GT</b><p>监督信号不只是文本答案，而是整段 episode 中的 action/state/timestamp/video 对齐序列。</p></div>
+          </div>
+          <figure class="media-box">
+            <div class="media-frame video-frame">
+              <video controls preload="metadata" playsinline poster="assets/video_previews/RH20T_cfg1_task_0071_user_0001_scene_0010_cfg_0001_038522063145_b0beee5d58.jpg">
+                <source src="assets/video_previews/RH20T_cfg1_task_0071_user_0001_scene_0010_cfg_0001_038522063145_b0beee5d58.webm" type="video/webm">
+                <source src="assets/local_media/RH20T_cfg1_task_0071_user_0001_scene_0010_cfg_0001_038522063145_b0beee5d588c.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption>Episode preview：完整动作过程比单帧标注更关键。</figcaption>
+          </figure>
+        </article>
+
+        <article class="sample">
+          <div>
+            <h3>Task_planning / next action <span class="badge l3">L3</span></h3>
+            <p class="source">RoboInter-VQA/Task_planning/meta/val/planning/task_planning.json · fields: task, images[list], information, conversations</p>
+            <p><b>为什么这样分：</b>输入是一组时序图，问题问 next actionable task，答案依赖当前阶段和目标任务。</p>
+            <div class="qa"><b>Prompt / question</b><p>&lt;image&gt; &lt;image&gt; ... Toward achieving 'fold the towel', what's the next actionable task? Please answer in a short phrase.</p></div>
+            <div class="qa"><b>Answer / GT</b><p>fold the towel on the table</p></div>
+          </div>
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <div class="frame-strip" style="padding:10px;">
+                <img src="assets/local_media/6927_exterior_image_1_left_148_5ebc8c588ca5.jpg" alt="Planning frame 1" loading="lazy">
+                <img src="assets/local_media/6927_exterior_image_1_left_169_360f54079c5e.jpg" alt="Planning frame 2" loading="lazy">
+                <img src="assets/local_media/6927_exterior_image_1_left_191_f5c0eaa0acc2.jpg" alt="Planning frame 3" loading="lazy">
+              </div>
+            </div>
+            <figcaption>planning frames：多帧才能判断下一步。</figcaption>
+          </figure>
+        </article>
+
+        <article class="sample">
+          <div>
+            <h3>Task_planning / past primitive selection <span class="badge l3">L3</span></h3>
+            <p class="source">RoboInter-VQA/Task_planning/meta/val/choice/task_planning.json · fields: task, images[list], conversations</p>
+            <p><b>为什么这样分：</b>问题问刚刚执行过哪个 primitive，需要从历史帧中恢复过去动作。</p>
+            <div class="qa"><b>Prompt / question</b><p>&lt;image&gt; ... During 'Pick up the cup', which primitive was just carried out? Choices: [A. press, B. strike, C. place, D. transfer].</p></div>
+            <div class="qa"><b>Answer / GT</b><p>C</p></div>
+          </div>
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <div class="frame-strip" style="padding:10px;">
+                <img src="assets/local_media/RH20T_cfg3_task_0038_user_0010_scene_0003_cfg_0003_104122062295_211_215047c303d1.jpg" alt="Choice frame 1" loading="lazy">
+                <img src="assets/local_media/RH20T_cfg3_task_0038_user_0010_scene_0003_cfg_0003_104122062295_215_5826ce39601d.jpg" alt="Choice frame 2" loading="lazy">
+                <img src="assets/local_media/RH20T_cfg3_task_0038_user_0010_scene_0003_cfg_0003_104122062295_219_765d4f31b72a.jpg" alt="Choice frame 3" loading="lazy">
+              </div>
+            </div>
+            <figcaption>choice frames：从历史片段里判断刚发生的 primitive。</figcaption>
+          </figure>
+        </article>
+
+        <article class="sample">
+          <div>
+            <h3>TrajectoryPrediction_Task <span class="badge l2">L2</span></h3>
+            <p class="source">RoboInter-VQA/Generation/meta/val/origin_format/full_single_multi_contact_obj_traj_qa.json · fields: task, images, gt, conversations</p>
+            <p><b>为什么这样分：</b>输出是 ordered trajectory points；这是局部运动过程，不是完整任务计划。</p>
+            <div class="qa"><b>Prompt / question</b><p>&lt;image&gt; The robot task is 'move the green object from one stove to the other' ... provide 10 trajectory points to accomplish the task.</p></div>
+            <div class="qa"><b>Answer / GT</b><p>{"future_traj": [[93.0, 0.0], [120.0, 34.0], [138.0, 79.0], [139.0, 123.0], [130.0, 118.0], [163.0, 118.0], [167.0, 125.0], [163.0, 141.0], [141.0, 116.0], [140.0, 122.0]]}</p></div>
+          </div>
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <img src="assets/local_media/75136_exterior_image_1_left_0_d972bab73bbb.jpg" alt="Trajectory prediction sample" loading="lazy">
+            </div>
+            <figcaption>Generation/image/val/traj_init_point_qa：轨迹是有序输出。</figcaption>
+          </figure>
+        </article>
+
+        <article class="sample">
+          <div>
+            <h3>TrajChoice <span class="badge l2">L2</span></h3>
+            <p class="source">RoboInter-VQA/Understanding/meta/val/traj_choice.json · fields: task, images, gt, conversations</p>
+            <p><b>为什么这样分：</b>需要理解绿色起点到红色终点的路径趋势，选择能完成子任务的轨迹。</p>
+            <div class="qa"><b>Prompt / question</b><p>&lt;image&gt; The robot task is 'put the marker in the pot' ... Which image depicts the right trajectory? The available choice is [A, B, C, D].</p></div>
+            <div class="qa"><b>Answer / GT</b><p>D</p></div>
+          </div>
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <img src="assets/local_media/concat_3182fb04b0ca.jpg" alt="Trajectory choice sample" loading="lazy">
+            </div>
+            <figcaption>Understanding/image/val/traj_choice/droid_0000008/concat.jpg</figcaption>
+          </figure>
+        </article>
+
+        <article class="sample">
+          <div>
+            <h3>RoboVQA reasoning video <span class="badge l2p">L2+</span></h3>
+            <p class="source">Molmo2-ER/Molmo2-ER-RoboVQA/robovqa_reasoning_0.json · fields: video, metadata, conversations</p>
+            <p><b>为什么这样分：</b>答案依赖整段视频里动作是否按目标发生，不是单帧识别。</p>
+            <div class="qa"><b>Prompt / question</b><p>what just happened?</p></div>
+            <div class="qa"><b>Answer / GT</b><p>&lt;think&gt; The instruction was to release the 9 number ball in the billiard triangle, but the agent moved the white ball instead. &lt;/think&gt; &lt;answer&gt;no&lt;/answer&gt;</p></div>
+          </div>
+          <figure class="media-box">
+            <div class="media-frame video-frame">
+              <video controls preload="metadata" playsinline poster="assets/video_previews/4857681842253668822_049df064db.jpg">
+                <source src="assets/video_previews/4857681842253668822_049df064db.webm" type="video/webm">
+                <source src="assets/local_media/4857681842253668822_049df064db0c.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption>RoboVQA clip：判断任务是否成功需要看完整过程。</figcaption>
+          </figure>
+        </article>
+
+        <article class="sample">
+          <div>
+            <h3>ILVR sequence_plan <span class="badge l3">L3 reasoning-chain</span></h3>
+            <p class="source">ILVR/comt/TRAIN.jsonl · fields: text_input, image_input, sequence_plan, original_final_answer</p>
+            <p><b>为什么这样分：</b>sequence_plan 把问题拆成 text step 和 latent helper image，是显式多步推理链。</p>
+            <div class="qa"><b>Prompt / question</b><p>In △ABC, line BD bisects AC perpendicularly. ∠A is equal to 20°. The degree measure of ∠CBD is (). option:['20°', '30°', '60°', '70°']</p></div>
+            <div class="qa"><b>Answer / GT</b><p>70°</p></div>
+          </div>
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <img src="assets/local_media/10003_ff64cc14dc45.png" alt="ILVR creation helper image" loading="lazy">
+            </div>
+            <figcaption>images_comt/creation/10003.png：latent helper image 可作为中间视觉状态。</figcaption>
+          </figure>
+        </article>
+
+        <article class="sample">
+          <div>
+            <h3>Embodied-R1 FSD_visual_trace <span class="badge l2">L2</span></h3>
+            <p class="source">FSD_visual_trace/test.parquet · fields: problem, answer, images[bytes], data_type</p>
+            <p><b>为什么这样分：</b>单图输入，但答案是按执行顺序排列的 waypoint trajectory。</p>
+            <div class="qa"><b>Prompt / question</b><p>&lt;image&gt; Move the yellow block in the middle of the table. Use 2D points to mark the manipulated object-centric waypoints ... the number of points must be 8.</p></div>
+            <div class="qa"><b>Answer / GT</b><p>&lt;type&gt;fsd_visual_trace&lt;/type&gt;{"trajectory": [[158, 59], [164, 64], [185, 70], [210, 82], [229, 97], [244, 111], [253, 133], [260, 132]]}</p></div>
+          </div>
+          <figure class="media-box">
+            <div class="media-frame contain">
+              <img src="assets/local_media/embodied_r1_fsd_visual_trace_sample.jpg" alt="Embodied-R1 FSD visual trace sample" loading="lazy">
+            </div>
+            <figcaption>Embodied-R1 / FSD_visual_trace：图像来自 parquet 内嵌 bytes 导出；监督目标是按顺序排列的 2D waypoints。</figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <section id="not-long">
+        <p class="eyebrow">Boundary Cases</p>
+        <h2>不建议误判为长程的任务</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>任务</th><th>分类</th><th>原因</th></tr></thead>
+            <tbody>
+              <tr><td>RoboInter-VQA contact/current/final box</td><td>多数 L0/L1</td><td>虽然 final box 预测的是结果位置，但监督目标仍是单个框；缺少多步序列输出。</td></tr>
+              <tr><td>RoboPoint / refcoco / handal / roborefit</td><td>L0</td><td>核心是单图 point/segmentation/grounding，是长程任务中的感知子模块。</td></tr>
+              <tr><td>RefSpatial 2D/3D choice、SAT、CLEVR、GRiD</td><td>L0-L1</td><td>主要是单步空间/深度/关系 QA，不含显式时间计划。</td></tr>
+              <tr><td>SenseNova-SI-8M 多视角/空间 QA</td><td>L1</td><td>70.2% 为多图样本，适合视角、方向、距离、时序排序等空间能力；但没有机器人 action/state 序列。</td></tr>
+              <tr><td>MolmoAct2 / calvin_lerobot / RoboCerebra</td><td>L3</td><td>这些是新加入的 episode/demo 数据，不能按普通空间 QA 处理，应保留 episode、frame_index、state/action 或 BDDL/demo 结构。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="recommendations">
+        <p class="eyebrow">Training Notes</p>
+        <h2>训练/评估建议</h2>
+        <div class="two-col">
+          <div class="mini-panel">
+            <h3>优先用于长程能力</h3>
+            <ul class="compact-list">
+              <li>真正的长程机器人能力：优先用 RoboInter-Data、MolmoAct2、calvin_lerobot、RoboCerebra demo/bench，再接 RoboInter-VQA Task_planning 做高层规划监督。</li>
+              <li>视频过程理解：用 RoboVQA、SIMS-VSI、VSI-590K video subset，以及 MolmoAct2/RoboCerebra 中已对齐的视频资源。</li>
+              <li>推理链长程：ILVR sequence_plan 可作为非机器人长推理链数据。</li>
+            </ul>
+          </div>
+          <div class="mini-panel">
+            <h3>作为子技能使用</h3>
+            <ul class="compact-list">
+              <li>局部动作轨迹：用 TrajectoryPrediction、TrajChoice、FSD_visual_trace，但不要当完整 planning。</li>
+              <li>单图 grounding、bbox、point、segmentation、spatial QA 更适合作为长程系统的基础视觉能力。</li>
+              <li>SenseNova-SI-8M 应补 `task_type` 字段后再混训，例如 camera_motion、ego_exo_matching、temporal_order、distance/depth、relative_relation、counting。</li>
+              <li>建议新增筛选字段：horizon_level、horizon_reason、temporal_dependency、requires_history、requires_future_prediction、output_is_sequence。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="counting">
+        <p class="eyebrow">Counting Caveats</p>
+        <h2>计数口径注意</h2>
+        <ul class="compact-list">
+          <li>RoboInter-VQA Generation 的 llava/origin/smart_resize 是格式变体，不能直接相加。</li>
+          <li>VSI-590K 同时包含 video 和 image，只有 video 字段存在的 374,148 条按视频时序处理。</li>
+          <li>ILVR 是 reasoning-chain 长程，不是机器人执行长程。</li>
+          <li>RoboVQA 大 JSON 没有在本报告中重新全量解析 record 数，分类依据来自字段结构、样本 metadata 和既有语义报告。</li>
+          <li>SenseNova-SI-8M 的 52 个 zip 已校验解压并删除；现有分类来自 prompt 模板反推，不是官方显式字段。</li>
+          <li>calvin_lerobot 与 MolmoAct2 的图像/视频形态不同：calvin 图像 bytes 嵌在 parquet，MolmoAct2 多数子集有外部 videos 目录。</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
