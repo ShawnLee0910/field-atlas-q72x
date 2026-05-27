@@ -637,7 +637,7 @@
               <tr><td>MolmoAct2</td><td>375G</td><td>已核验 LeRobot v3 子集：266,539 episodes；30,665,227 frames；约 70,474 tasks；1,915 mp4。DROID 子集最大：74,604 episodes、17,758,044 frames。</td><td>`meta/info.json` 汇总；`data/chunk-*/*.parquet` 与 `videos/*.mp4` 为 LeRobot 标准结构，可直接读取。</td></tr>
               <tr><td>calvin_lerobot</td><td>106G</td><td>17,870 episodes；1,071,743 frames；389 tasks；30 fps；robot_type=panda；total_videos=0，图像 bytes 嵌在 episode parquet 内。</td><td>LeRobot v2.1 `meta/info.json` + 17,870 个 episode parquet 核验。</td></tr>
               <tr><td>RoboCerebra</td><td>128G</td><td>trainset 1,000 case 目录；约 1,063 mp4、1,060 png、1,056 hdf5、1,069 bddl；RLDS/TFDS 分片 1,536 个；RoboCerebraBench 65 case 目录。</td><td>目录与文件类型直接扫描；`*.tfrecord-*` 是训练分片，不是压缩包。</td></tr>
-              <tr><td>SenseNova-SI-8M</td><td>1.1T</td><td>8,164,067 JSONL rows；2,763,306 个唯一图片文件；40,018,115 image references；70.2% 样本为多图。</td><td>JSONL 全量扫描 + image reference 抽样校验；无显式 category/type 字段，分类需从 prompt 模板反推。</td></tr>
+              <tr><td>SenseNova-SI-8M</td><td>1.1T</td><td>8,164,067 JSONL rows；2,763,306 个唯一图片文件；40,018,115 image references；70.2% 样本为多图。按每 500 行抽 1 条的系统抽样 16,329 条估算，大类为：空间关系/朝向 37.1%，单图空间/属性/计数 QA 19.4%，度量距离/深度/3D 14.5%，多图/多视角/时序视角 10.5%，几何 grounding 3.3%，长尾模板待细分 15.1%。</td><td>JSONL 全量扫描 + image reference 抽样校验；无显式 category/type 字段，分类来自 prompt 模板反推，不是官方标签。</td></tr>
               <tr><td>Molmo2-ER</td><td>1.5T</td><td>SIMS-VSI 203,048 rows；VSI-590K 590,667 records，其中 video 374,148、image 216,519；SenseNova-SI 833,132 rows；SAT 172,384 rows；VST-P 合计 563,190 rows。</td><td>来自 parquet/jsonl 缓存统计；RoboVQA 大 JSON 本轮未全量重数，只校验字段结构和样本。</td></tr>
               <tr><td>Embodied-R1-Dataset</td><td>53G</td><td>总计 321,397 rows；其中 FSD_visual_trace 33,090 rows。</td><td>来自 parquet profile 与语义汇总；FSD_visual_trace 的图片样例已从 parquet bytes 导出到页面 assets。</td></tr>
               <tr><td>ILVR / COMT</td><td>22G</td><td>TRAIN 3,450；TEST 400；PNG helper images 17,087，其中 creation 3,109、deletion 5,496、selection 4,465、update 4,017。sequence_plan steps: text 19,658 + latent 11,961。</td><td>JSONL 行数和 PNG 文件数直接核验；sequence_plan step 数来自既有语义汇总。</td></tr>
@@ -676,7 +676,7 @@
             <ul class="compact-list">
               <li>TrajectoryPrediction origin_format train: 130,170；更像局部轨迹/waypoint，不是完整任务规划。</li>
               <li>TrajChoice/TrajDirection/TrajLang train files: 33,939；FSD_visual_trace: 33,090。</li>
-              <li>SIMS-VSI + VSI-590K video subset 约 577,196 条视频空间样本；SenseNova-SI-8M 有 573 万多图样本，但重点是空间/视角/关系，不是机器人多步执行计划。</li>
+              <li>SIMS-VSI + VSI-590K video subset 约 577,196 条视频空间样本；SenseNova-SI-8M 有 573 万多图样本，其中小类集中在相对方向 19.6%、单图空间关系 12.3%、米制距离/深度 9.7%、相机运动 9.7%、路径/导航式多帧问答 9.0%、物体朝向 8.5%；重点是空间/视角/关系，不是机器人多步执行计划。</li>
             </ul>
           </div>
         </div>
@@ -954,7 +954,7 @@
               <tr><td>RoboInter-VQA contact/current/final box</td><td>多数 L0/L1</td><td>虽然 final box 预测的是结果位置，但监督目标仍是单个框；缺少多步序列输出。</td></tr>
               <tr><td>RoboPoint / refcoco / handal / roborefit</td><td>L0</td><td>核心是单图 point/segmentation/grounding，是长程任务中的感知子模块。</td></tr>
               <tr><td>RefSpatial 2D/3D choice、SAT、CLEVR、GRiD</td><td>L0-L1</td><td>主要是单步空间/深度/关系 QA，不含显式时间计划。</td></tr>
-              <tr><td>SenseNova-SI-8M 多视角/空间 QA</td><td>L1</td><td>70.2% 为多图样本，适合视角、方向、距离、时序排序等空间能力；但没有机器人 action/state 序列。</td></tr>
+              <tr><td>SenseNova-SI-8M 多视角/空间 QA</td><td>L1</td><td>70.2% 为多图样本；抽样反推的大类以空间关系/朝向、单图空间 QA、度量距离/深度、多视角/时序视角为主。适合训练 spatial latent 和 current IR grounding，但没有机器人 action/state 序列。</td></tr>
               <tr><td>MolmoAct2 / calvin_lerobot / RoboCerebra</td><td>L3</td><td>这些是新加入的 episode/demo 数据，不能按普通空间 QA 处理，应保留 episode、frame_index、state/action 或 BDDL/demo 结构。</td></tr>
             </tbody>
           </table>
@@ -978,7 +978,7 @@
             <ul class="compact-list">
               <li>局部动作轨迹：用 TrajectoryPrediction、TrajChoice、FSD_visual_trace，但不要当完整 planning。</li>
               <li>单图 grounding、bbox、point、segmentation、spatial QA 更适合作为长程系统的基础视觉能力。</li>
-              <li>SenseNova-SI-8M 应补 `task_type` 字段后再混训，例如 camera_motion、ego_exo_matching、temporal_order、distance/depth、relative_relation、counting。</li>
+              <li>SenseNova-SI-8M 应补 `task_type` 字段后再混训，建议至少拆成 relative_direction、object_orientation、navigation_route、metric_distance、relative_distance、camera_motion、ego_exo_matching、temporal_order、bbox/point grounding、counting、attribute_relation。</li>
               <li>建议新增筛选字段：horizon_level、horizon_reason、temporal_dependency、requires_history、requires_future_prediction、output_is_sequence。</li>
             </ul>
           </div>
@@ -993,7 +993,7 @@
           <li>VSI-590K 同时包含 video 和 image，只有 video 字段存在的 374,148 条按视频时序处理。</li>
           <li>ILVR 是 reasoning-chain 长程，不是机器人执行长程。</li>
           <li>RoboVQA 大 JSON 没有在本报告中重新全量解析 record 数，分类依据来自字段结构、样本 metadata 和既有语义报告。</li>
-          <li>SenseNova-SI-8M 已整理为 JSONL + images 结构；现有分类来自 prompt 模板反推，不是官方显式字段。</li>
+          <li>SenseNova-SI-8M 已整理为 JSONL + images 结构；现有分类来自 prompt 模板反推，不是官方显式字段。当前口径是每 500 行抽 1 条、共 16,329 条样本的系统抽样，适合作为分布估算和混训路由依据。</li>
           <li>calvin_lerobot 与 MolmoAct2 的图像/视频形态不同：calvin 图像 bytes 嵌在 parquet，MolmoAct2 多数子集有外部 videos 目录。</li>
           <li>覆盖范围：独立分析 10 组主数据集；RoboCerebraBench 归入 RoboCerebra benchmark；molmoact2_manifest、robocerebra_manifest 是 manifest / Git metadata，不作为独立训练数据集。</li>
         </ul>
