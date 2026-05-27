@@ -995,6 +995,7 @@
           <li>RoboVQA 大 JSON 没有在本报告中重新全量解析 record 数，分类依据来自字段结构、样本 metadata 和既有语义报告。</li>
           <li>SenseNova-SI-8M 已整理为 JSONL + images 结构；现有分类来自 prompt 模板反推，不是官方显式字段。</li>
           <li>calvin_lerobot 与 MolmoAct2 的图像/视频形态不同：calvin 图像 bytes 嵌在 parquet，MolmoAct2 多数子集有外部 videos 目录。</li>
+          <li>覆盖范围：独立分析 10 组主数据集；RoboCerebraBench 归入 RoboCerebra benchmark；molmoact2_manifest、robocerebra_manifest 是 manifest / Git metadata，不作为独立训练数据集。</li>
         </ul>
       </section>
     </main>
