@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>空间与具身数据集审阅报告</title>
+  <title>数据集整理与可视化报告</title>
   <style>
     :root {
       color-scheme: light;
@@ -47,11 +47,11 @@
 <body>
   <main>
     <p class="eyebrow">Dataset Audit</p>
-    <h1>空间与具身数据集审阅报告</h1>
-    <p class="lead">用于汇报当前数据资产是否适合训练“当前/历史观测 + 指令 -> latent reasoning -> 未来可执行 IR”。两个报告分别覆盖可视化样例、字段结构、长程任务分级和训练优先级。</p>
+    <h1>数据集整理与可视化报告</h1>
+    <p class="lead">整理当前数据集的规模、文件结构、真实样例、标注字段和任务类型，方便快速浏览、对比和分享。</p>
     <section class="summary" aria-label="summary">
       <div class="metric"><span>新增重点</span><strong>4 组</strong></div>
-      <div class="metric"><span>核心长程</span><strong>7 类</strong></div>
+      <div class="metric"><span>任务分类</span><strong>多类</strong></div>
       <div class="metric"><span>总规模</span><strong>约 4T</strong></div>
       <div class="metric"><span>展示方式</span><strong>真实样例</strong></div>
     </section>
@@ -59,12 +59,12 @@
       <a class="card" href="dataset_visual_summary_20260521.html">
         <span class="tag">Visual audit</span>
         <h2>数据集可视化与标注分析</h2>
-        <p>易读的主报告：先给结论，再展示 SenseNova-SI-8M、MolmoAct2、calvin_lerobot、RoboCerebra 等数据的真实图像、视频、字段和训练价值。</p>
+        <p>易读的主报告：先给总览，再展示 SenseNova-SI-8M、MolmoAct2、calvin_lerobot、RoboCerebra 等数据的真实图像、视频、字段和标注类型。</p>
       </a>
       <a class="card" href="long_horizon_task_classification_20260522.html">
-        <span class="tag">Long horizon</span>
-        <h2>长程任务分类报告</h2>
-        <p>按 L3/L2/L1/L0 判断哪些数据能做未来监督、哪些只能做 current IR，以及哪些需要 detector、SAM、tracking、grasp/contact 等伪标注工具补齐。</p>
+        <span class="tag">Task taxonomy</span>
+        <h2>数据集任务类型分类</h2>
+        <p>按数据形态、时间结构、任务类型和标注字段梳理各数据集，便于快速判断不同数据的内容、规模和使用边界。</p>
       </a>
     </section>
     <p class="note">更新日期：2026-05-27。页面为静态报告，图片和视频均使用相对资源路径。</p>
