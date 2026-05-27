@@ -538,6 +538,7 @@
         <a href="#volume">数据量统计</a>
         <a href="#effective-scale">有效规模判断</a>
         <a href="#table">分类总表</a>
+        <a href="#dataset-detail">细分类别</a>
         <a href="#media">相关图片/视频</a>
         <a href="#examples">代表样本</a>
         <a href="#not-long">易误判任务</a>
@@ -636,7 +637,7 @@
               <tr><td>RoboInter-VQA</td><td>149G</td><td>Task_planning: train 928,819；val 36,494，其中 choice 15,059、decide 10,629、planning 10,806。<br>TrajectoryPrediction origin_format train: 130,170，其中 init 65,085、no-init 65,085。<br>TrajChoice/TrajDirection/TrajLang train files: 33,939。</td><td>关键 JSON 文件直接 `json.load` 后计数；Generation 的 llava/origin/smart_resize 是格式变体，不能相加。</td></tr>
               <tr><td>MolmoAct2</td><td>375G</td><td>已核验 LeRobot v3 子集：266,539 episodes；30,665,227 frames；约 70,474 tasks；1,915 mp4。DROID 子集最大：74,604 episodes、17,758,044 frames。</td><td>`meta/info.json` 汇总；`data/chunk-*/*.parquet` 与 `videos/*.mp4` 为 LeRobot 标准结构，可直接读取。</td></tr>
               <tr><td>calvin_lerobot</td><td>106G</td><td>17,870 episodes；1,071,743 frames；389 tasks；30 fps；robot_type=panda；total_videos=0，图像 bytes 嵌在 episode parquet 内。</td><td>LeRobot v2.1 `meta/info.json` + 17,870 个 episode parquet 核验。</td></tr>
-              <tr><td>RoboCerebra</td><td>128G</td><td>trainset 1,000 case 目录；约 1,063 mp4、1,060 png、1,056 hdf5、1,069 bddl；RLDS/TFDS 分片 1,536 个；RoboCerebraBench 65 case 目录。</td><td>目录与文件类型直接扫描；`*.tfrecord-*` 是训练分片，不是压缩包。</td></tr>
+              <tr><td>RoboCerebra</td><td>128G</td><td>trainset 1,000 case 目录；约 1,063 mp4、1,060 png、1,056 hdf5、1,069 bddl；RLDS/TFDS 分片 1,536 个；RoboCerebraBench 60 case 目录（6 类 benchmark，各 10 个）。</td><td>目录与文件类型直接扫描；`*.tfrecord-*` 是训练分片，不是压缩包。</td></tr>
               <tr><td>SenseNova-SI-8M</td><td>1.1T</td><td>8,164,067 JSONL rows；2,763,306 个唯一图片文件；40,018,115 image references；70.2% 样本为多图。按每 500 行抽 1 条的系统抽样 16,329 条估算，大类为：空间关系/朝向 37.1%，单图空间/属性/计数 QA 19.4%，度量距离/深度/3D 14.5%，多图/多视角/时序视角 10.5%，几何 grounding 3.3%，长尾模板待细分 15.1%。</td><td>JSONL 全量扫描 + image reference 抽样校验；无显式 category/type 字段，分类来自 prompt 模板反推，不是官方标签。</td></tr>
               <tr><td>Molmo2-ER</td><td>1.5T</td><td>SIMS-VSI 203,048 rows；VSI-590K 590,667 records，其中 video 374,148、image 216,519；SenseNova-SI 833,132 rows；SAT 172,384 rows；VST-P 合计 563,190 rows。</td><td>来自 parquet/jsonl 缓存统计；RoboVQA 大 JSON 本轮未全量重数，只校验字段结构和样本。</td></tr>
               <tr><td>Embodied-R1-Dataset</td><td>53G</td><td>总计 321,397 rows；其中 FSD_visual_trace 33,090 rows。</td><td>来自 parquet profile 与语义汇总；FSD_visual_trace 的图片样例已从 parquet bytes 导出到页面 assets。</td></tr>
@@ -708,7 +709,7 @@
               <tr><td>RoboInter-Data / LeRobot RH20T</td><td><span class="badge l3">L3 强长程</span></td><td>82,894 episodes；40,755,632 frames；165,788 videos；146 tasks</td><td>完整机器人 episode，median length 约 384 frames，最长超过 6K frames。</td><td>长程 manipulation policy、轨迹/接触/抓取过程建模</td></tr>
               <tr><td>MolmoAct2 / LeRobot mixture</td><td><span class="badge l3">L3 强长程</span></td><td>266,539 episodes；30,665,227 frames；1,915 mp4；子集含 DROID、RT-1、Bridge、BC-Z、LIBERO、Tabletop、Household</td><td>LeRobot v3 action/state/frame_index/episode_index/task_index；部分子集有视频，与 action reasoning 模型训练目标直接相关。</td><td>机器人动作推理、policy SFT/finetune、跨数据源 action/state 统一训练</td></tr>
               <tr><td>calvin_lerobot</td><td><span class="badge l3">L3 强长程</span></td><td>17,870 episodes；1,071,743 frames；389 tasks；30 fps；panda</td><td>每个 episode 是 parquet；包含多路 RGB/depth bytes、state、actions、timestamp、frame_index、task_index。</td><td>桌面 manipulation episode 训练，适合补充机器人长期执行数据</td></tr>
-              <tr><td>RoboCerebra / trainset + bench</td><td><span class="badge l3">L3 多步任务 demo/benchmark</span></td><td>trainset 1,000 cases；1,056 hdf5 demos；约 1,063 mp4；1,069 BDDL；RLDS/TFDS 1,536 shards</td><td>BDDL 任务 + demo.hdf5 + mp4/png/goal 描述，天然是多步桌面/家庭任务。</td><td>长程任务理解、demo 解析、BDDL/IR 约束检查和 benchmark 评测</td></tr>
+              <tr><td>RoboCerebra / trainset + bench</td><td><span class="badge l3">L3 多步任务 demo/benchmark</span></td><td>trainset 1,000 cases；bench 60 cases；1,056 hdf5 demos；约 1,063 mp4；1,069 BDDL；RLDS/TFDS 1,536 shards</td><td>BDDL 任务 + demo.hdf5 + mp4/png/goal 描述，天然是多步桌面/家庭任务。</td><td>长程任务理解、demo 解析、BDDL/IR 约束检查和 benchmark 评测</td></tr>
               <tr><td>RoboInter-VQA / Task_planning</td><td><span class="badge l3">L3 强长程</span></td><td>train 928,819 records；val choice/decide/planning 合计约 36K</td><td>任务名直接包含 Planning、Future、Past、Remaining Steps、Temporal、Success、Affordance。输入通常是一串时序图片。</td><td>高层任务规划 VQA、下一步动作、未来预测、剩余步骤判断</td></tr>
               <tr><td>ILVR / COMT sequence_plan</td><td><span class="badge l3">L3 推理链长程</span></td><td>TRAIN 3,450；TEST 400；sequence_plan steps: text 19,658 + latent 11,961</td><td>每条样本含多个 text/latent 中间步骤，latent helper image 是中间视觉状态。</td><td>多步视觉/几何推理，不是机器人控制，但属于长推理链</td></tr>
               <tr><td>RoboInter-VQA / TrajectoryPrediction</td><td><span class="badge l2">L2 轨迹型</span></td><td>origin_format train 130,170 records；另有 llava/smart_resize 格式变体</td><td>输出 10 个或更多 2D trajectory points，点的顺序就是运动过程。</td><td>局部子任务轨迹预测；可作为长程 policy 的低层技能</td></tr>
@@ -721,6 +722,38 @@
               <tr><td>SAT / CLEVR / GRiD / RoboPoint / grounding 类</td><td><span class="badge l0">L0 非长程</span></td><td>单图 QA、框/点、分割、合成空间关系</td><td>标注是单步定位或回答；即使很有用，也只是原子能力。</td><td>作为 perception/grounding 子技能</td></tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+
+      <section id="dataset-detail">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Dataset Detail</p>
+            <h2>各数据集细分类别与训练用途</h2>
+            <p class="muted">这里把“能不能训练当前/未来 IR”拆到字段层面，避免把空间 QA、单图 grounding、episode action/state 和 BDDL demo 混成一类。</p>
+          </div>
+          <span class="badge media">fine-grained audit</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>数据集</th><th>大类 / 小类</th><th>可直接监督</th><th>对 latent future IR 的判断</th><th>需要补齐</th></tr></thead>
+            <tbody>
+              <tr><td>MolmoAct2</td><td>DROID、RT-1、Bridge、BC-Z、LIBERO、MolmoAct Household、MolmoAct Tabletop；任务文本以 pick/place、open/close、container/drawer、orientation、soft object 为主。</td><td>episode_id、frame_index、timestamp、multi-view images、state/action、task_index；DROID 另有 language_instruction 和 camera extrinsics。</td><td>最适合训练 O_t -> O_future/state delta/action-aligned latent；LIBERO/Calvin 类子集适合先做 MVP，DROID/RT-1 适合真实泛化。</td><td>object box、functional part、contact region、grasp pose、waypoint/trace 的伪标注。</td></tr>
+              <tr><td>calvin_lerobot</td><td>Panda tabletop；block pick/place 76.6%，旋转/重定向 49.9%，滑门 20.6%，抽屉 18.8%，开关/灯 12.3%。</td><td>rgb_static/rgb_gripper/rgb_tactile、depth_*、state[15]、actions[7]、frame_index、task_index；median episode length 65。</td><td>短程但干净，适合 current/history -> future functional state、drawer/door/switch state transition。</td><td>对象框、把手/功能部位、接触点、成功条件伪标注。</td></tr>
+              <tr><td>RoboCerebra</td><td>trainset 1,000 cases；benchmark 60 cases：Ideal、Memory_Execution、Memory_Exploration、Mix、Observation_Mismatching、Random_Disturbance。</td><td>BDDL regions/yaw/object constraints；task_description step/timestep/related_objects；goal.json state_pair；demo.hdf5 + mp4。</td><td>最适合把自然语言任务转成显式 symbolic IR，并用 demo/video 对齐视觉状态变化；也是 IR 可检查性评测集。</td><td>从视频抽 object/gripper box、contact、grasp、trace；BDDL 到统一 IR schema 的解析器。</td></tr>
+              <tr><td>RoboInter-Data</td><td>DROID 152,986 episodes；RH20T 82,894 episodes；annotation.* 包含 subtask/skill/box/segmentation/contact/trace。</td><td>action、state、primary/wrist images、camera_view、annotation.object_box/gripper_box/affordance_box/contact_points/trace/segmentation。</td><td>和 RoboInter IR suite 最接近，是显式可执行 IR 的主干训练源。</td><td>统一 episode/frame 索引；把 annotation.* 和 Q_annotation.* 映射到一致 IR 字段。</td></tr>
+              <tr><td>RoboInter-VQA</td><td>Generation、Understanding、Task_planning 三族；Task_planning train 928,819；Generation 三格式不能相加。</td><td>contact/current/final box、contact point、gripper det、trajectory、grounding choice、grasp/approach choice、future/past planning QA。</td><td>适合训练 IR decoder 和 planner head；final box / Future_Prediction 是弱 future IR，但没有完整 state/action episode。</td><td>坐标口径统一；role 拼写 normalize；与 RoboInter-Data 原始 episode 对齐。</td></tr>
+              <tr><td>Molmo2-ER</td><td>VST-P、SIMS-VSI、VSI-590K、RoboVQA、RoboPoint、SAT/CLEVR/GRiD；覆盖多图、多视角、视频、点位、机器人视频 QA。</td><td>question_type/type、conversations、video/image、多图路径、RoboPoint 点位/区域。</td><td>主要塑造 spatial/video latent；RoboVQA 可补机器人过程理解，但不能替代 action/state supervision。</td><td>强制保留 subset/task_type 路由，避免单图/多图/视频/机器人 QA 混采混标。</td></tr>
+              <tr><td>SenseNova-SI-8M</td><td>抽样估算：空间关系/朝向 37.1%，单图空间 QA 19.4%，度量距离/深度/3D 14.5%，多图/视角/时序 10.5%，grounding 3.3%。</td><td>id、image[list]、conversations；没有官方 category/type。</td><td>空间 latent 底座，不直接训练未来可执行 IR。</td><td>按 prompt 反推 task_type；长尾模板继续细分。</td></tr>
+              <tr><td>RefSpatial</td><td>2D choice/reasoning、3D choice/reasoning、multi-view、vacant、visual_choice、Simulator；按 `id` 行估算约 2.58M QA records。</td><td>image + depth + conversations；vacant point、bbox highlighted visual choice、think。</td><td>适合 current depth/geometry/vacant-region IR；不含动作序列，不单独做 future supervision。</td><td>从目录/文件名补 task_type；把 depth、vacant、multi_view 分开采样。</td></tr>
+              <tr><td>Embodied-R1</td><td>spatial_qa 88,138；point/segmentation grounding 139,189；FSD free point 33,090；FSD visual trace 33,090；Open6DOR 10,028；ViRL 17,862。</td><td>`answer` 中的 point、bbox、segmentation、trajectory、3D coordinate/direction。</td><td>很适合 current IR decoder 和 waypoint 预训练；多数没有 episode/time index。</td><td>不要当完整长程任务；需要和 episode 数据混训才有 future transition。</td></tr>
+              <tr><td>ILVR / COMT</td><td>creation、deletion、selection、update；TRAIN 3,450，TEST 400；sequence_plan latent steps 11,961。</td><td>text_input、image_input、sequence_plan、helper image、final answer。</td><td>可训练 latent helper / reasoning scaffold；不是机器人 future IR。</td><td>只作为辅助 latent reasoning 数据，不进入 action/state 或 contact IR 主监督。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout" style="margin-top:14px;">
+          <p><b>落地排序：</b>先用 RoboInter-Data + MolmoAct2 + calvin_lerobot 建 episode/future-pair 主干；用 RoboCerebra 解析 symbolic IR 和 benchmark；用 RoboInter-VQA/Embodied-R1 补 box/point/contact/trace/current IR；再用 SenseNova、Molmo2-ER、RefSpatial 训练空间 latent。</p>
         </div>
       </section>
 
