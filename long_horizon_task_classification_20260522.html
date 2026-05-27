@@ -529,7 +529,7 @@
   <div class="layout">
     <aside class="side">
       <h1>长程任务分类</h1>
-      <p>原始统计日期 2026-05-22<br>页面整理 2026-05-26<br>新增数据复核 2026-05-26<br>Root: /home/liyuanshuai/data/datasets</p>
+      <p>原始统计日期 2026-05-22<br>页面整理 2026-05-27<br>新增数据复核 2026-05-26<br>空间与具身数据集审阅版</p>
 
       <div class="toc-title"><span>目录</span><span>TOC</span></div>
       <nav class="toc" aria-label="页面目录">
@@ -551,7 +551,7 @@
         <div class="hero-copy">
           <p class="eyebrow">Long Horizon Audit</p>
           <h1>长程任务分类报告</h1>
-          <p class="lead">这份报告把本地数据集按 horizon level 分层：真正长程 episode / planning、视频或轨迹时序、多视角上下文、单步原子标注。新版把目录、图像、视频预览和代表样本放到同一条阅读线上，方便快速判断哪些数据值得优先用于长程能力训练。</p>
+          <p class="lead">这份报告按 horizon level 判断数据是否适合训练“当前/历史观测 + 指令 -> latent reasoning -> 未来可执行 IR”。重点区分真正长程 episode / planning、视频或轨迹时序、多视角空间上下文，以及只能作为基础感知能力的单步原子标注。</p>
         </div>
         <div class="hero-panel" aria-label="报告概览">
           <div class="kpi-grid">
@@ -624,9 +624,9 @@
           <div>
             <p class="eyebrow">Data Volume</p>
             <h2>数据量统计与口径</h2>
-            <p class="muted">2026-05-26 补跑核验：目录体积来自 `du -sh`；条数优先来自实际 metadata / JSON 直接计数，其次来自既有缓存报告。当前 datasets 根目录约 4.0T，排除 `.cache/.lock/.metadata` 后无真实待解压归档。</p>
+            <p class="muted">2026-05-26 补充核验：目录体积来自本地扫描；条数优先采用 metadata / JSON 直接计数，其次采用既有缓存报告。统计重点是“可训练目标”和“是否能构造当前-未来配对”，不是单纯比较磁盘大小。</p>
           </div>
-          <span class="badge media">verified counts</span>
+          <span class="badge media">audited counts</span>
         </div>
         <div class="table-wrap">
           <table>
@@ -634,10 +634,10 @@
             <tbody>
               <tr><td>RoboInter-Data</td><td>382G</td><td>DROID: 152,986 episodes；46,259,014 frames；305,972 videos；43,026 tasks。<br>RH20T: 82,894 episodes；40,755,632 frames；165,788 videos；146 tasks。</td><td>`info.json` 字段 + `episodes.jsonl/tasks.jsonl` 行数核验。</td></tr>
               <tr><td>RoboInter-VQA</td><td>149G</td><td>Task_planning: train 928,819；val 36,494，其中 choice 15,059、decide 10,629、planning 10,806。<br>TrajectoryPrediction origin_format train: 130,170，其中 init 65,085、no-init 65,085。<br>TrajChoice/TrajDirection/TrajLang train files: 33,939。</td><td>关键 JSON 文件直接 `json.load` 后计数；Generation 的 llava/origin/smart_resize 是格式变体，不能相加。</td></tr>
-              <tr><td>MolmoAct2</td><td>375G</td><td>已核验 LeRobot v3 子集：266,539 episodes；30,665,227 frames；约 70,474 tasks；1,915 mp4。DROID 子集最大：74,604 episodes、17,758,044 frames。</td><td>`meta/info.json` 汇总；`data/chunk-*/*.parquet` 与 `videos/*.mp4` 已展开，无需解压。</td></tr>
+              <tr><td>MolmoAct2</td><td>375G</td><td>已核验 LeRobot v3 子集：266,539 episodes；30,665,227 frames；约 70,474 tasks；1,915 mp4。DROID 子集最大：74,604 episodes、17,758,044 frames。</td><td>`meta/info.json` 汇总；`data/chunk-*/*.parquet` 与 `videos/*.mp4` 为 LeRobot 标准结构，可直接读取。</td></tr>
               <tr><td>calvin_lerobot</td><td>106G</td><td>17,870 episodes；1,071,743 frames；389 tasks；30 fps；robot_type=panda；total_videos=0，图像 bytes 嵌在 episode parquet 内。</td><td>LeRobot v2.1 `meta/info.json` + 17,870 个 episode parquet 核验。</td></tr>
               <tr><td>RoboCerebra</td><td>128G</td><td>trainset 1,000 case 目录；约 1,063 mp4、1,060 png、1,056 hdf5、1,069 bddl；RLDS/TFDS 分片 1,536 个；RoboCerebraBench 65 case 目录。</td><td>目录与文件类型直接扫描；`*.tfrecord-*` 是训练分片，不是压缩包。</td></tr>
-              <tr><td>SenseNova-SI-8M</td><td>1.1T</td><td>8,164,067 JSONL rows；2,763,306 已解压唯一图片；40,018,115 image references；70.2% 样本为多图。52 个图片 zip 已校验解压并删除。</td><td>解压状态文件 + JSONL 全量扫描；无显式 category/type 字段，分类需从 prompt 模板反推。</td></tr>
+              <tr><td>SenseNova-SI-8M</td><td>1.1T</td><td>8,164,067 JSONL rows；2,763,306 个唯一图片文件；40,018,115 image references；70.2% 样本为多图。</td><td>JSONL 全量扫描 + image reference 抽样校验；无显式 category/type 字段，分类需从 prompt 模板反推。</td></tr>
               <tr><td>Molmo2-ER</td><td>1.5T</td><td>SIMS-VSI 203,048 rows；VSI-590K 590,667 records，其中 video 374,148、image 216,519；SenseNova-SI 833,132 rows；SAT 172,384 rows；VST-P 合计 563,190 rows。</td><td>来自 parquet/jsonl 缓存统计；RoboVQA 大 JSON 本轮未全量重数，只校验字段结构和样本。</td></tr>
               <tr><td>Embodied-R1-Dataset</td><td>53G</td><td>总计 321,397 rows；其中 FSD_visual_trace 33,090 rows。</td><td>来自 parquet profile 与语义汇总；FSD_visual_trace 的图片样例已从 parquet bytes 导出到页面 assets。</td></tr>
               <tr><td>ILVR / COMT</td><td>22G</td><td>TRAIN 3,450；TEST 400；PNG helper images 17,087，其中 creation 3,109、deletion 5,496、selection 4,465、update 4,017。sequence_plan steps: text 19,658 + latent 11,961。</td><td>JSONL 行数和 PNG 文件数直接核验；sequence_plan step 数来自既有语义汇总。</td></tr>
@@ -646,7 +646,7 @@
           </table>
         </div>
         <div class="callout" style="margin-top:14px;">
-          <p><b>还没全量重数的部分：</b>Molmo2-ER / RoboVQA 的 6 个超大 JSON 文件本轮没有重新 streaming 计数；报告里只保留“reasoning_0..4 + understanding 大 JSON”的描述，避免把采样结果写成精确总数。新加入的 SenseNova-SI-8M、MolmoAct2、calvin_lerobot、RoboCerebra 已完成可读性/解压状态核验。</p>
+          <p><b>还没全量重数的部分：</b>Molmo2-ER / RoboVQA 的 6 个超大 JSON 文件本轮没有重新 streaming 计数；报告里只保留“reasoning_0..4 + understanding 大 JSON”的描述，避免把采样结果写成精确总数。新加入的 SenseNova-SI-8M、MolmoAct2、calvin_lerobot、RoboCerebra 已完成结构、规模与可读性核验。</p>
         </div>
       </section>
 
@@ -993,7 +993,7 @@
           <li>VSI-590K 同时包含 video 和 image，只有 video 字段存在的 374,148 条按视频时序处理。</li>
           <li>ILVR 是 reasoning-chain 长程，不是机器人执行长程。</li>
           <li>RoboVQA 大 JSON 没有在本报告中重新全量解析 record 数，分类依据来自字段结构、样本 metadata 和既有语义报告。</li>
-          <li>SenseNova-SI-8M 的 52 个 zip 已校验解压并删除；现有分类来自 prompt 模板反推，不是官方显式字段。</li>
+          <li>SenseNova-SI-8M 已整理为 JSONL + images 结构；现有分类来自 prompt 模板反推，不是官方显式字段。</li>
           <li>calvin_lerobot 与 MolmoAct2 的图像/视频形态不同：calvin 图像 bytes 嵌在 parquet，MolmoAct2 多数子集有外部 videos 目录。</li>
         </ul>
       </section>
